@@ -2,8 +2,14 @@
 
 namespace App\Console\Commands;
 
+use GuzzleHttp\Client;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Queue;
+
+ini_set('memory_limit', '2G');
+ini_set('max_execution_time', '7200'); // 7200 seconds = 2 hours
+
 
 class RetrievePornstarPhotos extends Command
 {
@@ -26,25 +32,30 @@ class RetrievePornstarPhotos extends Command
      */
     public function handle()
     {
-        // Step 1: Fetch JSON data from the URL
-        $url = 'https://www.pornhub.com/files/json_feed_pornstars.json';
-        $response = Http::get($url);
+        $client = new Client([
+            'verify' => false,
+        ]);
 
-        if ($response->failed()) {
-            $this->error('Failed to retrieve JSON data.');
-            return;
+        $response = $client->get('https://www.pornhub.com/files/json_feed_pornstars.json');
+
+// Handle the response as needed
+        $data = $response->getBody()->getContents();
+
+        $data = json_decode($data);
+                // Step 2: Split the data into chunks
+        //        $chunks = array_chunk($data['pornstars'], 10); // Split data into chunks of 10
+
+        //        // Step 3: Process each chunk in a thread (Queue)
+        //        foreach ($chunks as $chunk) {
+        //            Queue::push(new DownloadPhotosJob($chunk));
+        //        }
+        //
+        //        $this->info('Photos are being downloaded...');
+
+        foreach($data as $datum){
+
+            print_r($datum);
         }
 
-        $data = $response->json();
-
-        // Step 2: Split the data into chunks
-        $chunks = array_chunk($data['pornstars'], 10); // Split data into chunks of 10
-
-        // Step 3: Process each chunk in a thread (Queue)
-        foreach ($chunks as $chunk) {
-            Queue::push(new DownloadPhotosJob($chunk));
-        }
-
-        $this->info('Photos are being downloaded...');
     }
 }

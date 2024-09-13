@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace App\Jobs;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -21,7 +21,7 @@ class RetrievePornstarPhotos extends Command
     public function handle()
     {
         // Step 1: Fetch JSON data from the URL
-        $url = \StaticUrlEnum::StaticUrlJsonFeedPornstars->value;
+        $url = \SdkEndpoints::StaticUrlJsonFeedPornstars->value;
         $response = Http::get($url);
 
         if ($response->failed()) {

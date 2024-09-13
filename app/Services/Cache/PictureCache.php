@@ -33,8 +33,6 @@ class PictureCache
 
             return $pictureContents;
         }
-
-        // If the picture does not exist in the cache or web drive, return null
         return null;
     }
 
