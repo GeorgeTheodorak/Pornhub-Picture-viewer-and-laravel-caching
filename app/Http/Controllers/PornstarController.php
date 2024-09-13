@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Pornstar;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class PornstarController extends Controller
@@ -50,12 +48,11 @@ class PornstarController extends Controller
          */
         public function index()
         {
-            // Fetch all pornstars from the database
+            // Example of fetching data
             $pornstars = Pornstar::all();
 
-            // Return the Inertia view with the pornstars data
             return Inertia::render('Pornstars/Index', [
-                'pornstars' => $pornstars,
+                'pornstars' => $pornstars
             ]);
         }
 

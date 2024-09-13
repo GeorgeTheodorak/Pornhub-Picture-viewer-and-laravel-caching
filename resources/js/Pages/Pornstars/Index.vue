@@ -1,4 +1,7 @@
+
+
 <template>
+    <AuthenticatedLayout>
     <div>
         <h1>Pornstars List</h1>
         <ul>
@@ -11,10 +14,16 @@
             </li>
         </ul>
     </div>
+
+    </AuthenticatedLayout>
 </template>
 
+
+
 <script>
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 export default {
+    components: {AuthenticatedLayout},
     props: {
         pornstars: Array,
     },
