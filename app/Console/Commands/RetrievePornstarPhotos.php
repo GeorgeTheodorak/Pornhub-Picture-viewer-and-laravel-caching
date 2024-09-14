@@ -38,24 +38,17 @@ class RetrievePornstarPhotos extends Command
 
         $response = $client->get('https://www.pornhub.com/files/json_feed_pornstars.json');
 
-// Handle the response as needed
+        // Handle the response as needed
         $data = $response->getBody()->getContents();
 
         $data = json_decode($data);
-                // Step 2: Split the data into chunks
-        //        $chunks = array_chunk($data['pornstars'], 10); // Split data into chunks of 10
-
-        //        // Step 3: Process each chunk in a thread (Queue)
-        //        foreach ($chunks as $chunk) {
-        //            Queue::push(new DownloadPhotosJob($chunk));
-        //        }
-        //
-        //        $this->info('Photos are being downloaded...');
 
         foreach($data as $datum){
 
             print_r($datum);
         }
 
+        
+        
     }
 }

@@ -22,24 +22,24 @@ class PornstarController extends Controller
     //        return response()->json($pornstars);
     //    }
     //
-    //    /**
-    //     *
-    //     * @param  int  $id
-    //     * @return \Illuminate\Http\JsonResponse
-    //     */
-    //    public function show($id)
-    //    {
-    //        // Retrieve the pornstar by ID
-    //        $pornstar = Pornstar::find($id);
-    //
-    //        // Check if the pornstar was found
-    //        if (!$pornstar) {
-    //            return response()->json(['message' => 'Pornstar not found'], 404);
-    //        }
-    //
-    //        // Return the pornstar as a JSON response
-    //        return response()->json($pornstar);
-    //    }
+       /**
+        *
+        * @param  int  $id
+        * @return \Illuminate\Http\JsonResponse
+        */
+       public function show($id)
+       {
+           // Retrieve the pornstar by ID
+           $pornstar = Pornstar::find($id);
+    
+           // Check if the pornstar was found
+           if (!$pornstar) {
+               return response()->json(['message' => 'Pornstar not found'], 404);
+           }
+    
+           // Return the pornstar as a JSON response
+           return response()->json($pornstar);
+       }
 
 
         /**
