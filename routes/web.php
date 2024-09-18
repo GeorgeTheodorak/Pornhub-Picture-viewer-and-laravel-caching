@@ -25,6 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::get('/pornstars', [PornstarController::class, 'index'])->name('pornstars.index');
+    Route::get('/pornstars/{id}', [PornstarController::class, 'show'])->name('pornstars.show');
 
 });
 

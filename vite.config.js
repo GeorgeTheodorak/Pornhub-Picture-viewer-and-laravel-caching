@@ -17,4 +17,11 @@ export default defineConfig({
             },
         }),
     ],
+    server: {
+        host: '0.0.0.0', // This allows Vite to be accessed from outside the container
+        port: 5173,      // Vite's default port
+        hmr: {
+            host: 'localhost',  // Host for Hot Module Replacement (HMR)
+        },
+    }
 });

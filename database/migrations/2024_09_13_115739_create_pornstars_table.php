@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('pornstars', function (Blueprint $table) {
             $table->id(); // Primary key
+            $table->unsignedBigInteger('pornhub_id')->unique(); // New field for Pornhub ID
             $table->string('name');
             $table->string('hair_color')->nullable();
             $table->string('ethnicity')->nullable();
