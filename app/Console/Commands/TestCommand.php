@@ -5,16 +5,17 @@ namespace App\Console\Commands;
 use App\Managers\PornstarPictureManager;
 use App\Models\Pornstar;
 use App\Services\PornstarPictureService;
+use App\Utils\PictureUtil;
 use Illuminate\Console\Command;
 
-class RetrievePornstarPictures extends Command
+class TestCommand extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'app:retrieve-pictures';
+    protected $signature = 'app:test';
 
     /**
      * The console command description.
@@ -28,9 +29,10 @@ class RetrievePornstarPictures extends Command
      */
     public function handle()
     {
-        $pornstarPictureService = new PornstarPictureService();
-        $pornstarPictureService->buildPornstarPictureUrls();
-        $pornstarPictureService->sendRequestsAndLoad();
-        $pornstarPictureService->commitChanges();
+        print_r(PictureUtil::retrievePictureCdnForPornstar(2));
+        // Get distinct ethnicities for the filter dropdown
+//        $ethnicities = Pornstar::distinct()->pluck('ethnicity')->filter()->array();
+
+        print_r($ethnicities);
     }
 }

@@ -41,7 +41,7 @@ return new class extends Migration
             $table->string('wl_status')->nullable();
             $table->json('aliases')->nullable();
             $table->string('link')->nullable();
-            $table->json('thumbnails')->nullable(); // Store as JSON
+            $table->json('thumbnails')->nullable(); // Store as JSON the latest photos fetched from API
             $table->timestamps(); // created_at and updated_at
         });
     }

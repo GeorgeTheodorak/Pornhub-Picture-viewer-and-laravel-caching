@@ -8,6 +8,7 @@ use App\Models\Pornstar;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\Utils;
+use Illuminate\Support\Facades\Log;
 use function GuzzleHttp\Promise\Promise\settle;
 
 class PornstarPictureService
@@ -82,9 +83,9 @@ class PornstarPictureService
     }
 
 
-    public function sendRequestsAndSave()
+    public function sendRequestsAndLoad()
     {
-        $this->_pornstarIdsToThumbnailsUrl = array_slice($this->_pornstarIdsToThumbnailsUrl, 0, 100, true);
+//        $this->_pornstarIdsToThumbnailsUrl = array_slice($this->_pornstarIdsToThumbnailsUrl, 0, 200, true);
 
         // Array to hold promises
         $promises = [];
@@ -99,16 +100,18 @@ class PornstarPictureService
             $promises["$pornhubId-$deviceType-$index"] = $this->_client->getAsync($url, ['verify' => false])
                 ->then(
                     function ($response) use ($pornhubId, $deviceType, $index, $height, $width) {
+
                         // Handle successful response (e.g., save the picture data)
                         $imageData = $response->getBody()->getContents();
                         $this->setImageRetrieveData($pornhubId, $deviceType, $index, $imageData, $height, $width);
                     },
                     function ($exception) use ($pornhubId, $deviceType, $url, $index, $attempt, &$sendRequest, $maxRetries) {
+
                         // Handle failed request and retry if attempts are left
                         if ($attempt < $maxRetries) {
                             $nextAttempt = $attempt + 1;
-                            $delay = pow(2, $attempt);
-                            error_log("Retrying... ($nextAttempt/$maxRetries) for Pornstar ID: $pornhubId, Device: $deviceType, Index: $index after $delay seconds");
+                            $delay = pow(2, $attempt); // use power to increase the delay accordingly.
+                            Log::error("Retrying... ($nextAttempt/$maxRetries) for Pornstar ID: $pornhubId, Device: $deviceType, Index: $index after $delay seconds");
 
                             // Wait before retrying
                             sleep($delay);
@@ -116,7 +119,8 @@ class PornstarPictureService
                             // Retry the request
                             $sendRequest($pornhubId, $deviceType, $url, $index, $nextAttempt);
                         } else {
-                            error_log("Failed to download after $maxRetries attempts for Pornstar ID: $pornhubId, Device: $deviceType, Index: $index - " . $exception->getMessage());
+
+                            Log::error("Failed to download after $maxRetries attempts for Pornstar ID: $pornhubId, Device: $deviceType, Index: $index - " . $exception->getMessage());
                         }
                     }
                 );
@@ -194,7 +198,6 @@ class PornstarPictureService
             foreach ($picturesData as $picture) {
 
                 try {
-
                     $this->_pornstarPictureManager->savePicture($pornStarId, $picture);
                 } catch (\Throwable $e) {
 

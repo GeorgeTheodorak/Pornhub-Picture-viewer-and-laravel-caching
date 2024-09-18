@@ -7,13 +7,13 @@ services:
         container_name: laravel_app
         ports:
             - "8000:80"
+            - "5173:5173"
         volumes:
             - .:/var/www/html
             - ./php.ini:/usr/local/etc/php/php.ini # If you have custom PHP settings
         networks:
             - laravel
         depends_on:
-            - db
             - redis
         environment:
             - APP_ENV=local
@@ -34,22 +34,6 @@ services:
             - laravel
         depends_on:
             - app
-
-    db:
-        image: mysql:5.7
-        container_name: mysql_db
-        ports:
-            - "3306:3306"
-        environment:
-            MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: laravel
-            MYSQL_USER: user
-            MYSQL_PASSWORD: password
-        volumes:
-            - dbdata:/var/lib/mysql
-        networks:
-            - laravel
-
     redis:
         image: redis:alpine
         container_name: redis
@@ -57,23 +41,6 @@ services:
             - "6379:6379"
         networks:
             - laravel
-
-#    vite:
-#        image: node:16-alpine
-#        container_name: vite_fe
-#        working_dir: /var/www/html
-#        volumes:
-#            - .:/var/www/html
-#        command: sh -c "npm install && npm run dev"
-#        ports:
-#            - "5173:5173" # Vite default port
-#        networks:
-#            - laravel
-#        depends_on:
-#            - app
-
 networks:
     laravel:
 
-volumes:
-    dbdata:

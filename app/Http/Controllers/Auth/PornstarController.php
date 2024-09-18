@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Http\Controllers\Auth;
+
+use App\Http\Controllers\Controller;
+use App\Models\Pornstar;
+use App\Utils\PictureUtil;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
+use Inertia\Inertia;
+use Inertia\Response;
+
+class PornstarController extends Controller
+{
+
+    /**
+     * Display detailed information about a specific pornstar.
+     *
+     * @param int $id
+     * @return RedirectResponse|Response
+     */
+    public function show($id)
+    {
+        $pornstar = Pornstar::find($id);
+        if(!$pornstar){
+            return Redirect::route('pornstars.index');
+        }
+
+        // Retrieve picture cdns
+        $pictures = PictureUtil::retrievePictureCdnForPornstar($pornstar['pornhub_id']);
+
+        return Inertia::render('Pornstars/Show', [
+            'pornstar' => $pornstar,
+            'pictures' => $pictures,
+        ]);
+    }
+
+    public function index(Request $request)
+    {
+        $query = Pornstar::query();
+
+        if ($request->has('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        if ($request->has('ethnicity')) {
+            $query->where('ethnicity', $request->ethnicity);
+        }
+
+        $pornstars = $query->paginate($request->limit ?? 10);
+
+        // Get distinct ethnicities for the filter dropdown
+        $ethnicities = Pornstar::distinct()->pluck('ethnicity')->filter()->values()->toArray();
+
+        $pornstars = $query->paginate($request->limit);
+
+        return Inertia::render('Pornstars/Index', [
+            'pornstars' => $pornstars,
+            'search' => $request->search,
+            'limit' => $request->limit, // Pass the current limit to the frontend
+            'selectedEthnicity' => $request->ethnicity, // Pass the selected ethnicity to the frontend
+            'ethnicities' => $ethnicities, // Pass the list of ethnicities for the dropdown
+        ]);
+    }
+
+}

@@ -1,6 +1,7 @@
 <?php
 
-use App\Http\Controllers\PornstarController;
+use App\Http\Controllers\Auth\PornstarController;
+use App\Http\Controllers\PornstarPictureController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -28,5 +29,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/pornstars/{id}', [PornstarController::class, 'show'])->name('pornstars.show');
 
 });
+
+Route::get('pornstar/{pornstarId}/picture/{type}', [PornstarPictureController::class, 'getPicture'])->name('pornstar.picture');
 
 require __DIR__.'/auth.php';

@@ -19,7 +19,7 @@
                 <!-- Limit Selector -->
                 <div class="limit-selector">
                     <label for="limit">Results per page:</label>
-                    <select v-model="limit" @change="submitSearch" class="limit-dropdown">
+                    <select v-model="localLimit" @change="handleLimitChange" class="limit-dropdown">
                         <option value="10">10</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
@@ -38,17 +38,19 @@
                 </div>
             </div>
 
-            <!-- Pornstars Grid -->
-            <div class="pornstar-grid">
-                <div v-for="pornstar in pornstars.data" :key="pornstar.id" class="pornstar-card">
-                    <h2 class="pornstar-name">{{ pornstar.name }}</h2>
-                    <p><strong>Hair Color:</strong> {{ pornstar.hair_color }}</p>
-                    <p><strong>Ethnicity:</strong> {{ pornstar.ethnicity }}</p>
-                    <p><strong>Age:</strong> {{ pornstar.age }}</p>
-                    <p><strong>Pornhub ID:</strong> {{ pornstar.pornhub_id }}</p>
+            <!-- Pornstars List -->
+            <ul class="pornstar-list">
+                <li v-for="pornstar in pornstars.data" :key="pornstar.id" class="pornstar-item">
+                    <div class="pornstar-details">
+                        <h2 class="pornstar-name">{{ pornstar.name }}</h2>
+                        <p><strong>Hair Color:</strong> {{ pornstar.hair_color }}</p>
+                        <p><strong>Ethnicity:</strong> {{ pornstar.ethnicity }}</p>
+                        <p><strong>Age:</strong> {{ pornstar.age }}</p>
+                        <p><strong>Pornhub ID:</strong> {{ pornstar.pornhub_id }}</p>
+                    </div>
                     <a :href="`/pornstars/${pornstar.id}`" class="details-link">View Details</a>
-                </div>
-            </div>
+                </li>
+            </ul>
 
             <!-- Pagination Links -->
             <div class="pagination">
@@ -73,34 +75,45 @@
 
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { Inertia } from "@inertiajs/inertia"; // For pagination and form submission
+import { Inertia } from "@inertiajs/inertia";
+import { route } from "ziggy-js"; // For pagination and form submission
 
 export default {
     components: { AuthenticatedLayout },
     props: {
         pornstars: Object,
-        search: String, // Current search term
-        limit: Number, // Current limit of items per page
-        selectedEthnicity: String, // Current ethnicity filter
-        ethnicities: Array, // List of all ethnicities
+        search: String,
+        limit: Number,
+        selectedEthnicity: String,
+        ethnicities: Array,
     },
     data() {
         return {
-            searchQuery: this.search || "", // Initialize search input with current search term
-            limit: this.limit || 10, // Default limit of 10 results
-            selectedEthnicity: this.selectedEthnicity || "", // Selected ethnicity
+            searchQuery: this.search || "",
+            localLimit: this.limit || 10,
+            selectedEthnicity: this.selectedEthnicity || "",
         };
     },
     methods: {
         submitSearch() {
             Inertia.get(route('pornstars.index'), {
                 search: this.searchQuery,
-                limit: this.limit, // Send the selected limit value to the server
-                ethnicity: this.selectedEthnicity, // Send the selected ethnicity value
+                limit: this.localLimit,
+                ethnicity: this.selectedEthnicity,
             });
         },
+        handleLimitChange(event) {
+            this.localLimit = parseInt(event.target.value);
+            this.submitSearch();
+        },
         navigate(url) {
-            if (url) Inertia.visit(url);
+            if (url) {
+                console.log(`Navigating to: ${url}`);
+                Inertia.visit(url, {
+                    preserveState: true,
+                    preserveScroll: true,
+                });
+            }
         },
     },
 };
@@ -161,34 +174,37 @@ export default {
     border: 1px solid #ccc;
 }
 
-/* Grid Layout */
-.pornstar-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Auto-fit columns based on screen size */
-    gap: 20px;
-    margin: 20px 0;
+/* List Layout */
+.pornstar-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
 
-.pornstar-card {
+.pornstar-item {
     background-color: #333;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 15px;
+    border-radius: 8px;
     color: white;
+    margin-bottom: 10px;
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    min-height: 250px;
+    align-items: center;
+}
+
+.pornstar-details {
+    flex: 1;
 }
 
 .pornstar-name {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
+    font-size: 1.25rem;
+    margin-bottom: 5px;
 }
 
 .details-link {
     color: #007bff;
     text-decoration: none;
-    margin-top: auto;
+    font-weight: bold;
 }
 
 .details-link:hover {
