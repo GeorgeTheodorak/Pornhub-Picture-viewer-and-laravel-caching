@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Cache;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 
+//@@TODO Maybe use in the future.
 class PictureCache
 {
     protected int $cacheDuration; // Cache duration in minutes
 
     public function __construct()
     {
-        // Set cache duration; you can change this value as needed
-        $this->cacheDuration = 60; // Cache for 60 minutes
+        $this->cacheDuration = 60;
     }
 
     /**
@@ -57,4 +57,6 @@ class PictureCache
     {
         return 'picture_cache_' . $pictureName;
     }
+
+
 }

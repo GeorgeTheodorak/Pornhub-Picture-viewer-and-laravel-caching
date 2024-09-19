@@ -58,9 +58,9 @@ class PornstarController extends Controller
         return Inertia::render('Pornstars/Index', [
             'pornstars' => $pornstars,
             'search' => $request->search,
-            'limit' => $request->limit, // Pass the current limit to the frontend
-            'selectedEthnicity' => $request->ethnicity, // Pass the selected ethnicity to the frontend
-            'ethnicities' => $ethnicities, // Pass the list of ethnicities for the dropdown
+            'limit' => $request->limit,
+            'selectedEthnicity' => $request->ethnicity,
+            'ethnicities' => $ethnicities,
         ]);
     }
 

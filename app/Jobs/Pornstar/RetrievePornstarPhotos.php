@@ -6,7 +6,7 @@ ini_set('memory_limit', '2G');
 ini_set('max_execution_time', '7200'); // 7200 seconds = 2 hours
 
 use App\Managers\PornstarManager;
-use App\Services\PornstarPictureService;
+use App\Services\Cache\PornstarPictureService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -34,18 +34,11 @@ class RetrievePornstarPhotos implements ShouldQueue
      */
     public function handle()
     {
-        Log::info("Beginning to retrieve photos for pornstars");
+        Log::info("~RetrievePornstarPhotos~ Beginning to retrieve photos for pornstars");
+
         $pornstarPictureService = new PornstarPictureService();
+        $pornstarPictureService->buildAndProcessInBatches();
 
-        // run build first.
-        $pornstarPictureService->buildPornstarPictureUrls();
-
-        // send requests and save to db.
-        $pornstarPictureService->sendRequestsAndLoad();
-
-        // Commit changes.
-        $pornstarPictureService->commitChanges();
-
-        Log::info("Job finished.");
+        Log::info("~RetrievePornstarPhotos~ Job finished.");
     }
 }

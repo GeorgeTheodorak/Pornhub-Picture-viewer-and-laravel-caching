@@ -3,7 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Jobs\Daily\DailyRetrievePornstarsJob;
-use App\Services\RetrievePornhubData;
+use App\Services\Cache\PornstarPictureService;
+use App\Services\Cache\RetrievePornhubData;
 use Illuminate\Console\Command;
 
 ini_set('memory_limit', '2G');
@@ -29,7 +30,8 @@ class RetrievePornstarData extends Command
     /**
      * Execute the console command.
      */
-    public function handle(){
+    public function handle()
+    {
         DailyRetrievePornstarsJob::dispatch();
     }
 }

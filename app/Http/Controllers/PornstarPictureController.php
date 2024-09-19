@@ -38,13 +38,10 @@ class PornstarPictureController extends Controller
         foreach ($filesInDir as $file) {
 
             if (in_array(pathinfo($file, PATHINFO_EXTENSION), $imageExtensions)) {
-                $filePath = Storage::disk('media')->path($file);
 
-                // Get the last modified time of the file
+                $filePath = Storage::disk('media')->path($file);
                 $lastModified = Carbon::createFromTimestamp(Storage::disk('media')->lastModified($file));
                 $etag = md5_file($filePath);
-
-                // Set cache headers (Last-Modified and ETag)
                 $headers = [
                     'Last-Modified' => $lastModified->toRfc7231String(),
                     'ETag' => $etag,
