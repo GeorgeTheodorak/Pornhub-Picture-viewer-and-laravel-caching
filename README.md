@@ -85,9 +85,3 @@ Note: This process may take some time to complete.
 After seeding the database, use these credentials to log in:
 - Email: admin@admin.com
 - Password: password
-
-## Contributing
-[Add contribution guidelines if applicable]
-
-## License
-[Specify the license for your project]
