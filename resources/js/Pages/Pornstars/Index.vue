@@ -3,7 +3,7 @@
         <div>
             <h1 class="title">Pornstars List</h1>
 
-            <!-- Search Form, Limit Selector, and Ethnicity Filter -->
+            <!-- Search Form and Limit Selector -->
             <div class="filters-container">
                 <!-- Search Form -->
                 <form @submit.prevent="submitSearch" class="search-form">
@@ -25,32 +25,31 @@
                         <option value="100">100</option>
                     </select>
                 </div>
-
-                <!-- Ethnicity Filter -->
-                <div class="ethnicity-selector">
-                    <label for="ethnicity">Filter by ethnicity:</label>
-                    <select v-model="selectedEthnicity" @change="submitSearch" class="ethnicity-dropdown">
-                        <option value="">All Ethnicities</option>
-                        <option v-for="ethnicity in ethnicities" :key="ethnicity" :value="ethnicity">
-                            {{ ethnicity }}
-                        </option>
-                    </select>
-                </div>
             </div>
 
-            <!-- Pornstars List -->
-            <ul class="pornstar-list">
-                <li v-for="pornstar in pornstars.data" :key="pornstar.id" class="pornstar-item">
-                    <div class="pornstar-details">
-                        <h2 class="pornstar-name">{{ pornstar.name }}</h2>
-                        <p><strong>Hair Color:</strong> {{ pornstar.hair_color }}</p>
-                        <p><strong>Ethnicity:</strong> {{ pornstar.ethnicity }}</p>
-                        <p><strong>Age:</strong> {{ pornstar.age }}</p>
-                        <p><strong>Pornhub ID:</strong> {{ pornstar.pornhub_id }}</p>
-                    </div>
-                    <a :href="`/pornstars/${pornstar.id}`" class="details-link">View Details</a>
-                </li>
-            </ul>
+            <!-- Pornstars Table -->
+            <table class="pornstar-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Hair Color</th>
+                    <th>Ethnicity</th>
+                    <th>Age</th>
+                    <th>Pornhub ID</th>
+                    <th>Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="pornstar in pornstars.data" :key="pornstar.id">
+                    <td>{{ pornstar.name }}</td>
+                    <td>{{ pornstar.hair_color }}</td>
+                    <td>{{ pornstar.ethnicity }}</td>
+                    <td>{{ pornstar.age }}</td>
+                    <td>{{ pornstar.pornhub_id }}</td>
+                    <td><a :href="`/pornstars/${pornstar.id}`" class="details-link">View Details</a></td>
+                </tr>
+                </tbody>
+            </table>
 
             <!-- Pagination Links -->
             <div class="pagination">
@@ -84,14 +83,11 @@ export default {
         pornstars: Object,
         search: String,
         limit: Number,
-        selectedEthnicity: String,
-        ethnicities: Array,
     },
     data() {
         return {
             searchQuery: this.search || "",
             localLimit: this.limit || 10,
-            selectedEthnicity: this.selectedEthnicity || "",
         };
     },
     methods: {
@@ -99,7 +95,6 @@ export default {
             Inertia.get(route('pornstars.index'), {
                 search: this.searchQuery,
                 limit: this.localLimit,
-                ethnicity: this.selectedEthnicity,
             });
         },
         handleLimitChange(event) {
@@ -118,7 +113,6 @@ export default {
     },
 };
 </script>
-
 <style scoped>
 /* General Page Styling */
 .title {
@@ -126,6 +120,19 @@ export default {
     text-align: center;
     margin-bottom: 20px;
 }
+
+.filters-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}<style scoped>
+      /* General Page Styling */
+  .title {
+      color: white;
+      text-align: center;
+      margin-bottom: 20px;
+  }
 
 .filters-container {
     display: flex;
@@ -161,48 +168,53 @@ export default {
     background-color: #0056b3;
 }
 
-/* Limit and Ethnicity Dropdowns */
-.limit-selector, .ethnicity-selector {
+/* Limit Dropdown */
+.limit-selector {
     display: flex;
     align-items: center;
+    color: white; /* Ensure label text is visible */
 }
 
-.limit-dropdown, .ethnicity-dropdown {
-    margin-left: 10px;
+.limit-selector label {
+    color: white; /* Label text color */
+    margin-right: 10px; /* Space between label and dropdown */
+}
+
+.limit-dropdown {
     padding: 8px;
     border-radius: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid #ccc; /* Border color for dropdown */
+    background-color: #333; /* Background color for dropdown */
+    color: white; /* Text color inside dropdown */
 }
 
-/* List Layout */
-.pornstar-list {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+.limit-dropdown option {
+    background-color: #333; /* Background color for options */
+    color: white; /* Text color for options */
 }
 
-.pornstar-item {
-    background-color: #333;
-    padding: 15px;
-    border-radius: 8px;
-    color: white;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* Table Layout */
+.pornstar-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #222; /* Dark background for the table */
 }
 
-.pornstar-details {
-    flex: 1;
+.pornstar-table th,
+.pornstar-table td {
+    border: 1px solid #444; /* Slightly lighter border */
+    padding: 8px;
+    text-align: left;
+    color: #f9f9f9; /* Light text color */
 }
 
-.pornstar-name {
-    font-size: 1.25rem;
-    margin-bottom: 5px;
+.pornstar-table th {
+    background-color: #333; /* Darker background for header */
 }
 
 .details-link {
-    color: #007bff;
+    color: #1e90ff; /* Light blue for links */
     text-decoration: none;
     font-weight: bold;
 }

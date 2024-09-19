@@ -23,7 +23,7 @@ class PornstarController extends Controller
     public function show($id)
     {
         $pornstar = Pornstar::find($id);
-        if(!$pornstar){
+        if (!$pornstar) {
             return Redirect::route('pornstars.index');
         }
 
@@ -44,23 +44,12 @@ class PornstarController extends Controller
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('ethnicity')) {
-            $query->where('ethnicity', $request->ethnicity);
-        }
-
-        $pornstars = $query->paginate($request->limit ?? 10);
-
-        // Get distinct ethnicities for the filter dropdown
-        $ethnicities = Pornstar::distinct()->pluck('ethnicity')->filter()->values()->toArray();
-
         $pornstars = $query->paginate($request->limit);
 
         return Inertia::render('Pornstars/Index', [
             'pornstars' => $pornstars,
             'search' => $request->search,
             'limit' => $request->limit,
-            'selectedEthnicity' => $request->ethnicity,
-            'ethnicities' => $ethnicities,
         ]);
     }
 
