@@ -75,7 +75,7 @@
 <script>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Inertia } from "@inertiajs/inertia";
-import { route } from "ziggy-js"; // For pagination and form submission
+import { route } from "ziggy-js";
 
 export default {
     components: { AuthenticatedLayout },
@@ -95,6 +95,9 @@ export default {
             Inertia.get(route('pornstars.index'), {
                 search: this.searchQuery,
                 limit: this.localLimit,
+            }, {
+                preserveState: true,
+                preserveScroll: true,
             });
         },
         handleLimitChange(event) {
@@ -103,8 +106,15 @@ export default {
         },
         navigate(url) {
             if (url) {
-                console.log(`Navigating to: ${url}`);
-                Inertia.visit(url, {
+                const urlObj = new URL(url, window.location.origin);
+                const params = new URLSearchParams(urlObj.search);
+
+                params.set('search', this.searchQuery);
+                params.set('limit', this.localLimit);
+
+                urlObj.search = params.toString();
+
+                Inertia.visit(urlObj.toString(), {
                     preserveState: true,
                     preserveScroll: true,
                 });
@@ -113,6 +123,7 @@ export default {
     },
 };
 </script>
+
 <style scoped>
 /* General Page Styling */
 .title {
@@ -120,19 +131,6 @@ export default {
     text-align: center;
     margin-bottom: 20px;
 }
-
-.filters-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}<style scoped>
-      /* General Page Styling */
-  .title {
-      color: white;
-      text-align: center;
-      margin-bottom: 20px;
-  }
 
 .filters-container {
     display: flex;

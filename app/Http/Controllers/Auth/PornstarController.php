@@ -40,16 +40,27 @@ class PornstarController extends Controller
     {
         $query = Pornstar::query();
 
-        if ($request->has('search')) {
+        // Handle search query
+        if ($request->has('search') && !empty($request->search)) {
             $query->where('name', 'like', '%' . $request->search . '%');
         }
 
-        $pornstars = $query->paginate($request->limit);
+        // Default limit to 10 if not provided
+        $limit = $request->get('limit', 10);
+
+        // Get paginated results
+        $pornstars = $query->paginate($limit);
+
+        // Append search and limit parameters to pagination links
+        $pornstars->appends([
+            'search' => $request->search,
+            'limit' => $limit,
+        ]);
 
         return Inertia::render('Pornstars/Index', [
             'pornstars' => $pornstars,
             'search' => $request->search,
-            'limit' => $request->limit,
+            'limit' => $limit,
         ]);
     }
 
