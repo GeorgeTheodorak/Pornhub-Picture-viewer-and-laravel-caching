@@ -6,7 +6,7 @@ ini_set('memory_limit', '2G');
 ini_set('max_execution_time', '7200'); // 7200 seconds = 2 hours
 
 use App\Managers\PornstarManager;
-use App\Services\Cache\PornstarPictureService;
+use App\Services\PornstarPictureService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
